@@ -1,0 +1,43 @@
+{% extends 'give/base.html' %}
+
+{% block content %}
+<h1>{{ profile.username }}'s Portfolio</h1>
+{% if profile.avatar %}
+    <img src="{{ profile.avatar.url }}" alt="{{ profile.username }}" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+{% endif %}
+<p><strong>Username:</strong> {{ profile.username }}</p>
+<p><strong>Number of Posts:</strong> {{ post_count }}</p>
+
+<h2>Posts</h2>
+<ul class="list-group">
+    {% for item in post_list %}
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-2">
+                {% if item.first_photo %}
+                    <img src="{{ item.first_photo.image.url }}" class="img-fluid" alt="{{ item.post.title }}">
+                {% endif %}
+            </div>
+            <div class="col-md-10">
+                <h3>{{ item.post.title }}</h3>
+                <p>{{ item.post.description|truncatewords:30 }}</p>
+                <p><strong>Posted by:</strong> {{ item.post.user.username }}</p>
+                <p><strong>Category:</strong> {{ item.post.category.name }}</p>
+                <p><strong>Location:</strong> {{ item.post.city }}, {% if item.post.state %}{{ item.post.state }}, {% endif %}{{ item.post.country }}</p>
+                <p><strong>Published on:</strong> {{ item.post.created_at|date:"F j, Y, g:i a" }}</p>
+                <a href="{% url 'view_post' item.post.id %}" class="btn btn-primary">View Post</a>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+{% if profile.user.id != request.user.id %}
+    <a href="{% url 'start_private_chat' profile.user.id %}" class="btn btn-info">Text to User</a>
+{% else %}
+    <a href="{% url 'portfolio' %}" class="btn btn-info">My Portfolio</a>
+{% endif %}
+<a href="{% url 'dashboard' %}" class="btn btn-secondary">Dashboard</a>
+{% endblock %}
+
+

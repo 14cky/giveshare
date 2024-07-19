@@ -1,0 +1,35 @@
+{% extends 'give/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="profile-img">
+                <img src="{{ profile.avatar_url }}" alt="{{ profile.username }}" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="profile-head">
+                <h5>{{ profile.username }}</h5>
+                <h6>User</h6>
+            </div>
+            <div class="col-md-9">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{% url 'my_posts' %}" class="btn btn-info">My Posts</a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
