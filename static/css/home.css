@@ -1,0 +1,318 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: #f9f9f9;
+}
+
+header {
+    padding: 20px;
+    background: #fff;
+    border-bottom: 1px solid #000000;
+    top:0
+}
+
+header img {
+    max-width: 200px;
+}
+
+main {
+    padding: 20px;
+}
+
+h1 {
+    font-size: 4em;
+    margin: 20px 0;
+}
+
+p {
+    font-size: 1.7em;
+    margin: 10px 0 20px;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.cta-buttons button {
+    background: linear-gradient(90deg, rgba(242, 200, 73, 1) 0%, rgba(48, 223, 118, 1) 100%);
+    border: none;
+    padding: 10px 20px;
+    color: #000000;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+.cta-buttons span {
+    font-size: 1.2em;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    margin: 10px 0;
+    font-size: 1.4em;
+}
+
+.illustrations {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.illustration {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+.form_wrapper {
+    position:absolute;
+    bottom:0;
+    background-image:url('../image/component1155-vzzg.png');
+    height:226px;
+    width:100%;
+    align-items: center;
+    background-repeat:no-repeat;
+    display:grid;
+    background-size:100vw 100%;
+    left:0px;
+}
+
+.main {
+    position:absolute;
+    display:grid;
+    top:40%;
+    left:50%;
+    margin-right:50%;
+    transform: translate(-50%, -50%);
+    width:100vw;
+    z-index:3;
+}
+
+.basket {
+    position:absolute;
+    left:50px;
+    top:270px;
+}
+
+.book {
+    position:absolute;
+    left:200px;
+    top:300px;
+}
+
+.box1 {
+    position:absolute;
+    left:50px;
+    top:80px;
+}
+
+.box2 {
+    position:absolute;
+    right:80px;
+    top:30px;
+}   
+
+.box3 {
+    position:absolute;
+    right:140px;
+    top:390px;
+}
+
+.headphones {
+    position:absolute;
+    right:290px;
+    top:370px;
+}
+
+.leftbox {
+    position:absolute;
+    left:0;
+    top:250px;
+}
+
+.randomcube {
+    position:absolute;
+    left:260px;
+    top:370px;
+}
+
+.rightbox {
+    position:absolute;
+    right:0;
+    top:180px;
+}
+
+.rolller {
+    position:absolute;
+    left:10px;
+    top:320px;
+}   
+
+.shoes {
+    position:absolute;
+    right:200px;
+    top:265px;
+}
+
+.socer {
+    position:absolute;
+    right:0;
+    top:90px;
+}
+
+@media only screen and (max-width: 960px) {
+    html {
+        overflow:hidden;
+    }
+    
+    .randomcube {
+        display:none;
+    }
+    
+    .headphones {
+        display:none;
+    }
+    
+    .book {
+        top:300px
+    }
+    
+    .shoes {
+        top:260px
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    html {
+        overflow:hidden;
+    }
+    
+    .randomcube {
+        display:none;
+    }
+    
+    .headphones {
+        display:none;
+    }
+    
+    .book {
+        display:none
+    }
+    
+    .shoes {
+        display:none
+    }
+
+    .box1 {
+        top:130px;
+        left:60px
+    }
+
+    .socer {
+        right:50px
+    }
+
+    .box2 {
+        top:50px
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    html {
+        overflow:hidden;
+    }
+    
+    .randomcube {
+        display:none;
+    }
+    
+    .headphones {
+        display:none;
+    }
+    
+    .book {
+        display:none
+    }
+    
+    .shoes {
+        display:none
+    }
+    
+    .box1 {
+        top:150px;
+        left:0
+    }
+
+    .socer {
+        display:none;
+    }
+    
+    .basket {
+        display:none;
+    }
+    
+    .box2 {
+        right:0;
+        top:30px
+    }
+    
+    .rolller {
+        top:390px
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    html {
+        overflow:hidden;
+    }
+    
+    .randomcube {
+        display:none;
+    }
+    
+    .headphones {
+        display:none;
+    }
+    
+    .book {
+        display:none
+    }
+    
+    .shoes {
+        display:none
+    }
+    
+    .box1 {
+        display:none
+    }
+
+    .socer {
+        display:none;
+    }
+    
+    .basket {
+        display:none;
+    }
+    
+    .box2 {
+        display:none;
+    }
+    
+    .rolller {
+        top:390px
+    }
+
+    .box3 {
+        top: 280px
+    }
+}
