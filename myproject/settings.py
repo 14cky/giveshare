@@ -17,7 +17,7 @@ SECRET_KEY = 'django-insecure-tpkt4nn+!*j&bckjjjkenesserik2007haha!@n!hlw9t2j6id
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['giveshare.net', '51.20.201.164', 'www.giveshare.net']
+ALLOWED_HOSTS = ['giveshare.net', '51.20.201.164', 'www.giveshare.net','127.0.0.1']
 
 
 # Application definition
