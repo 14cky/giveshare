@@ -1,0 +1,55 @@
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="{% static 'image/logo.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Give&Share</title>
+    <link rel="stylesheet" href="{% static 'css\contact.css' %}">
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV26B24W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VBV26B24W3');
+</script>   
+ <meta name="description" content="{% block description %}Contact Give&Share for any problems, feedback, or innovative ideas. Use our form to reach out and help us improve our platform for a better user experience.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}Give&Share, contact us, feedback, support, help, user experience, platform improvement, problems, innovative ideas, community support{% endblock %}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="navbar">
+            <img src="{% static 'image\bg-icone.png' %}" alt="Give&Share logo" class="logo">
+            <a href="{% url 'dashboard' %}" class="back-to-dashboard">Back to Dashboard</a>
+        </div>
+        <div class="content">
+            <h2>Contact Us:</h2>
+            <p>If you have any problems, feedback, or innovative ideas that would make our website better, please contact us by using the form below:</p>
+            <form class="contact-form" method="post" action="{% url 'contact_us' %}">
+                {% csrf_token %}
+                <label for="id_name">Your name:</label>
+                <input type="text" id="id_name" name="name" placeholder="Enter your name">
+                <label for="id_email">Your email:</label>
+                <input type="email" id="id_email" name="email" placeholder="Enter your email">
+                <label for="content">Your message:</label>
+                <textarea id="id_message" rows="10" name="message" placeholder="Enter your message"></textarea>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+            {% if messages %}
+    <div class="alert alert-success mt-3">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+        </div>
+    </div>
+</body>
+{% csrf_token %}
+</html>
+{% endblock %}

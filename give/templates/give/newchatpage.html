@@ -1,0 +1,658 @@
+
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="shortcut icon" href="{% static 'image/logo.png' %}">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV26B24W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VBV26B24W3');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Give&Share</title>
+    <meta name="description" content="{% block description %}Connect with other users on Give&Share through our chat feature. Engage in respectful communication, share resources, and build community bonds.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}Give&Share, chat feature, user communication, respectful communication, share resources, community bonds, user interaction, messaging, resource sharing{% endblock %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/chat.css' %}"> -->
+     <style>
+/* CSS global */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    width:50px;
+    height:25px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Updated to 100% for better responsiveness */
+    height: 100vh;
+}
+
+.hamburger {
+    display: none; /* Hidden by default */
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.hamburger img {
+    width: 30px;
+    height: 30px;
+}
+
+.sidebar {
+    width: 20%;
+    background: linear-gradient(to bottom, #56FA97, #FFF787);
+    position: fixed; /* Fix the sidebar */
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-100%);
+}
+
+.sidebar.show {
+    transform: translateX(0); /* Show sidebar */
+}
+
+.nav-menu ul {
+    list-style-type: none;
+    padding: 10px;
+}
+
+.nav-menu li {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+
+
+.nav-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.search-bar {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+}
+
+.my-message {
+    background-color: #0ee73d;
+    color: #000;
+    text-align: left;
+    margin-left: auto;
+    float: right;
+    clear: both;
+    border-radius: 15px;
+    padding: 10px;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+.other-message {
+    background-color: #411be9;
+    color: #fff;
+    text-align: left;
+    margin-right: auto;
+    float: left;
+    clear: both;
+    border-radius: 15px;
+    padding: 10px;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+.message-data {
+    margin-bottom: 5px;
+}
+
+.search-bar input {
+    width: 90%;
+    padding: 5px;
+}
+
+.conversation-list {
+    list-style-type: none;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.preview-section {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.preview-section img, .preview-section .file-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    position: relative;
+}
+
+.preview-section .file-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    text-align: center;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    line-height: 20px;
+    padding: 0;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+.conversation {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    width:fit-content;
+}
+
+.conversation .profile-pic {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.conversation-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%; /* Ensure chat-container takes full width */
+    overflow: hidden;
+    margin-left:20%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding: 10px;
+    background-color: #d3f8d3;
+    width: 80%;
+    border-bottom: 1px solid #ccc;
+    position: fixed; /* Fix the header */
+    top: 0;
+    z-index: 1;
+    margin-left:20%;
+}
+
+.header .profile-container {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Allow user-info to stretch */
+}
+
+.username {
+    font-weight: bold;
+}
+
+.status.online {
+    color: green;
+}
+
+.status.offline {
+    color: red;
+}
+
+.chat-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background-color: #f8ffe0;
+}
+
+.nav-menu {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: center;
+    gap:10px;
+    height: 50px;
+    align-content: center;
+}
+
+.chat-history {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    margin-top:4%
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    max-width: 60%;
+}
+
+.sent {
+    background-color: #e0ffe0;
+    align-self: flex-start;
+}
+
+.received {
+    background-color: #d3f8d3;
+    align-self: flex-end;
+}
+
+.typing-status {
+    font-style: italic;
+    color: #666;
+    position: absolute;
+    bottom: 60px;
+    display: none;
+}
+
+.message-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.message-input input {
+    flex-grow: 1;
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.message-input input[type=file] {
+    display:none;
+}
+
+.send-btn {
+    padding: 10px;
+    background: transparent;
+    width: 100px;
+    border:none
+}
+
+.send-btn img {
+    width: 100px;
+}
+
+.delete-chat-button img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.delete-chat-button {
+    position:absolute;
+    right:0;
+    background:transparent;
+    border:none
+}
+
+/* Default layout */
+@media (min-width: 768px) {
+    .hamburger {
+        display: none; /* Hidden on larger screens */
+    }
+
+    .sidebar {
+        transform: translateX(0); /* Always show sidebar */
+        width: 20%;
+    }
+
+    .chat-container {
+        width: 80%;
+    }
+
+    .chat-section {
+        width: 100%;
+    }
+}
+
+/* Mobile layout */
+@media (max-width: 767px) {
+    .hamburger {
+        display: block; /* Show hamburger button */
+        margin-right: 10px;
+        z-index:1
+    }
+
+    .sidebar {
+        width: 100%;
+        position: absolute;
+        height: 100vh;
+        z-index:1;
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .header {
+        left: 0;
+        margin-left:0;
+        width:100%
+    }
+
+    .chat-section {
+        height: calc(100vh - 60px); /* Adjust height for fixed header */
+    }
+
+    .chat-container {
+        margin-left: unset;
+        height:93%;
+        bottom:0;
+        position:fixed;
+    }
+ 
+}
+     </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            
+            <nav class="nav-menu">
+                    <a href="{% url 'dashboard' %}"><img src="{% static 'image/home.svg' %}" alt="Home" class="nav-icon" aria-label="Home"></a>
+                    <a href="{% url 'search' %}"><img src="{% static 'image/search.svg' %}" alt="Search" class="nav-icon" aria-label="Search"></a>
+                    <a href="{% url 'chat_page' %}"><img src="{% static 'image/chat-bubble.svg' %}" alt="Messages" class="nav-icon" aria-label="Messages"></a>
+                    <a href="{% url 'create_post' %}"><img src="{% static 'image/edit-file.svg' %}" alt="Settings" class="nav-icon" aria-label="Settings"></a>
+            </nav>
+            <div class="search-bar" id="search-bar">
+                <input type="text" id="search-input" placeholder="Search username..." aria-label="Search">
+            </div>
+            <ul class="conversation-list" id="conversation-list">
+                {% for chat in chats %}
+                    {% for participant in chat.participants.all %}
+                        {% if participant != request.user %}
+                            <li class="conversation" data-chat-id="{{ chat.id }}">
+                                <img src="{{ participant.profile.avatar_url }}" alt="{{ participant.profile.username }}" class="profile-pic">
+                                <div class="conversation-info">
+                                    <span class="username">{{ participant.profile.username }}</span>
+                                </div>
+                                <button class="delete-chat-button" data-chat-id="{{ chat.id }}"><img src="{% static 'image\delete.png' %}"></button>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </aside>
+        <div class="main-content">
+            <div class="header">
+                <button class="hamburger" aria-label="Open menu" onclick="toggleSidebar()">
+                    <img src="{% static 'image/menu.svg' %}" alt="Hamburger Icon">
+                </button>
+                <img src="" alt="User Profile Picture" class="profile-pic" id="profile-pic">
+                <div class="user-info">
+                    <span class="username" id="chat-username">Username</span>                  
+                </div>
+            </div>
+            <div class="chat-container">
+                <main class="chat-section">
+                    <div class="chat-history" id="chat-history">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                    <div class="chat-message clearfix">
+                        <form id="chat-form" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <div id="preview" class="preview-section"></div>
+                                <div class="message-input">
+                                    <input type="text" id="message-input" placeholder="Text something..." aria-label="Type a message">
+                                    <label for="id_file">
+                                        <img src="{% static 'image\arrow.png' %}" style="margin-left:10px;margin-right:10px;margin-top:10px"></img>
+                                    </label>
+                                    <input type="file" name="file" class="d-none" id="id_file" multiple>
+                                    <button type="submit" class="send-btn" aria-label="Send"><img src="{% static 'image\sened.png' %}" alt="Send Icon"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/chat.js' %}"></script>
+    <script>    
+    </script>
+    <script>
+        
+    </script>
+    <script>function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const header = document.querySelector('.header');
+        const profilepic = document.getElementById('profile-pic');
+        const userinfo = document.querySelector('.user-info');
+        sidebar.classList.toggle('show');
+        if (sidebar.classList.contains('show')) {
+            profilepic.style.visibility = 'hidden';
+            userinfo.style.visibility = 'hidden';
+            header.style.width = '6%';
+            header.style.height = '6%';
+            header.style.background = "transparent";
+        } else {
+            profilepic.style.visibility = 'visible';
+            userinfo.style.visibility = 'visible';
+            header.style.width = '100%';
+            header.style.height = '65px';
+            header.style.background = "#d3f8d3";
+        }
+    }
+    </script>
+    {% csrf_token %}
+    <script>
+        function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
+    
+    function showPosition(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        sendLocationToServer(latitude, longitude);
+    }
+    
+    function showError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                console.log("User denied the request for Geolocation.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                console.log("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                console.log("The request to get user location timed out.");
+                break;
+            case error.UNKNOWN_ERROR:
+                console.log("An unknown error occurred.");
+                break;
+        }
+    }
+    
+    function sendLocationToServer(latitude, longitude) {
+        fetch('/save_location/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ latitude: latitude, longitude: longitude })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+    
+    window.onload = getLocation;
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('id_file');
+    const preview = document.getElementById('preview');
+
+    fileInput.addEventListener('change', function(event) {
+        preview.innerHTML = ''; // Clear any previous previews
+        const files = event.target.files;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const fileReader = new FileReader();
+
+            fileReader.onload = function(e) {
+                const fileURL = e.target.result;
+                const fileElement = document.createElement('div');
+                fileElement.classList.add('preview-item');
+
+                if (file.type.startsWith('image/')) {
+                    fileElement.innerHTML = `<img src="${fileURL}" alt="${file.name}"><button class="delete-button" data-id="${file.name}">Delete</button>`;
+                } else {
+                    fileElement.innerHTML = `<div class="file-preview">${file.name}</div><button class="delete-button" data-id="${file.name}">Delete</button>`;
+                }
+
+                preview.appendChild(fileElement);
+                addDeleteEventListener(fileElement.querySelector('.delete-button'));
+            };
+
+            fileReader.readAsDataURL(file);
+        }
+    });
+
+    function addDeleteEventListener(button) {
+        button.addEventListener('click', function() {
+            const fileName = button.getAttribute('data-id');
+            const previewItem = button.parentElement;
+            previewItem.remove();
+            fileInput.value = '';
+        });
+    }
+});
+
+document.querySelector('.send-btn').addEventListener('click', function() {
+    const preview = document.getElementById('preview');
+    preview.innerHTML = ''; // Clear the preview section
+});
+
+    
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-chat-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();  // Prevent the click event from propagating to parent elements
+                    const chatId = this.getAttribute('data-chat-id');
+                    fetch(`/chat/${chatId}/delete/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken'),
+                            'Content-Type': 'application/json',
+                        },
+                    }).then(response => response.json()).then(data => {
+                        if (data.status === 'success') {
+                            this.parentElement.remove();
+                        } else {
+                            alert('Failed to delete chat');
+                        }
+                    });
+                });
+            });
+        });
+    
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+    <script>
+    </script>
+    
+    
+</body>
+</html>
+{% endblock %}

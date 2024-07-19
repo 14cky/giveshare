@@ -1,0 +1,57 @@
+
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="{% static 'image/logo.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Give&Share</title>
+    <link rel="stylesheet" href="{% static 'css\login.css' %}">
+    <meta name="description" content="{% block description %}Login to Give&Share to access your account and start sharing and finding resources. Enjoy secure authentication and a seamless user experience.{% endblock %}">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV26B24W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VBV26B24W3');
+</script>   
+ <meta name="keywords" content="{% block keywords %}Give&Share, login, user authentication, account access, secure login, resource sharing, community platform, user experience, find resources, share resources{% endblock %}">
+<style>
+    @media (orientation: landscape) and (max-device-width: 1223px) {
+    .container {
+        position:relative;
+        top:150px
+    }
+    }
+</style>
+</head>
+<body>
+    <div class="container" aria-label="Login form container">
+        <a href="{% url 'home' %}"><img src="{% static 'image\icone.png' %}" alt="Give&Share logo" class="logo" aria-label="Give&Share logo"></a>
+        <h1><b>Login</b></h1>       
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form aria-labelledby="Login form" method="post">
+            {% csrf_token %}
+            {{ form.email }}
+
+            {{ form.password }}
+
+            <button type="submit">Sign in</button>
+        </form>
+        <a href="{% url 'password_reset' %}" class="forgot-password">Forgot password?</a>
+        <span>or</span>
+        <a href="{% url 'signup' %}" class="create-account">Create an account</a>
+    </div>
+    {% csrf_token %}
+</body>
+</html>
+{% endblock %}
