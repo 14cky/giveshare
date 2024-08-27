@@ -1,0 +1,282 @@
+{% load static %}
+{% load tz %}
+{% load custom_filters %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="shortcut icon" href="{% static 'image/logo.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Give&Share</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <script defer src="{% static 'js/dashboard.js' %}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV26B24W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VBV26B24W3');
+</script>
+ <meta name="description" content="{% block description %}Access your Give&Share dashboard to manage your posts, view notifications, and connect with the community. Enjoy an intuitive interface optimized for both desktop and mobile devices.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}Give&Share, dashboard, manage posts, notifications, community connection, user interface, desktop optimized, mobile optimized, user management, resource sharing{% endblock %}">
+<style>.post img {
+    max-width: 30%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius:40px;
+}
+@media (orientation: landscape)  and (max-device-width : 1223px){
+    .sidebar .bottom-images img {
+        display:none;
+    }
+    .sidebar .logo {
+        display:none;
+    }
+}
+.sidebar li img {
+    width:30px;height:30px;
+}
+
+
+@media (max-width: 768px) {
+     .post img {
+         border-radius:0;
+    }
+}
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.alert-icon {
+    margin-right: 10px;
+}
+
+.alert-message {
+    flex-grow: 1;
+}
+
+.alert-close {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-success .alert-icon::before {
+    content: '✔';
+    color: #3c763d;
+    font-size: 20px;
+}
+
+.alert-error, .alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert-error .alert-icon::before, .alert-danger .alert-icon::before {
+    content: '✘';
+    color: #a94442;
+    font-size: 20px;
+}
+
+.alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+.alert-warning .alert-icon::before {
+    content: '⚠';
+    color: #8a6d3b;
+    font-size: 20px;
+}
+
+</style>
+</head>
+<body>
+    <nav class="sidebar" id="menu" aria-hidden="true">
+        <button class="close-btn" aria-label="Close menu">×</button>
+        <img src="{% static 'image/bg-icone.png' %}" alt="Give&Share logo" class="logo">
+        <ul>
+            <li><img src="{% static 'image/home.svg' %}" style="width:30px;height:30px"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><img src="{% static 'image/person-male.svg' %}" style="width:30px;height:30px"><a href="{% url 'portfolio' %}">My Portfolio</a></li>
+            <li><img src="{% static 'image/search.svg' %}" style="width:30px;height:30px"><a href="{% url 'search' %}">Search</a></li>
+            <li><img src="{% static 'image/edit-file.svg' %}" style="width:30px;height:30px"><a href="{% url 'create_post' %}">Make Post</a></li>
+            <li><img src="{% static 'image/chat-bubble.svg' %}" style="width:30px;height:30px"><a href="{% url 'chat_page' %}">Chat</a></li>
+        </ul>
+        <div class="bottom-images">
+            <img src="{% static 'image/box1.png' %}" alt="Additional Image 1" style="left:-90px;bottom:0;width:250px;height:250px">
+            <img src="{% static 'image/box2.png' %}" alt="Additional Image 2" style="left:-80px;width:250px;height:250px;bottom:-100px">
+            <img src="{% static 'image/box3.png' %}" alt="Additional Image 3" style="left:50px;bottom:-60px">
+        </div>
+    </nav>
+    <div class="main-container">
+        <div class="navbar">
+            <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+                ☰
+            </button>
+            <div class="user-info">
+                {% if notifications|length >= 1 %}
+                <span id="user-email"><img src="{% static 'image/bell2.png' %}" width="30px" height="30px" style="position:relative;right:-10px;top:3px"></span>
+            {% else %}
+                <span id="user-email"><img src="{% static 'image/bell.png' %}" width="30px" height="30px" style="position:relative;right:-10px;top:3px"></span>
+            {% endif %}
+                <a href="{% url 'contact_us' %}"><img src="{% static 'image/customer-care.svg' %}" width="30px" height="30px" style="position:relative;top:3px"></a>
+                <a href="{% url 'about_us' %}"><img src="{% static 'image/book.svg' %}" width="30px" height="30px" style="position:relative;top:3px"></a>
+                <a href="{% url 'logout' %}"><img src="{% static 'image/entry.svg' %}" width="30px" height="30px" style="position:relative;top:3px"></a>
+            </div>
+        </div>
+        <div class="content">
+            <!-- posts -->
+<div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <span class="alert-icon"></span>
+                    <span class="alert-message">{{ message }}</span>
+                    <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% for item in posts %}
+    <div class="post">
+        <h3>{{ item.title }}</h3>
+        {% if item|classname == 'Post' %}
+                <img src="{{ item.image_url }}" alt="Post Image">
+            <p>Published on: {{ item.created_at|localtime|date:"F j, Y, g:i a" }}</p>
+            {% if item.country and item.city %}
+                <p>Country:{{ item.country }}, {% if item.country == "United States" %}State:{{ item.state }},{% endif %}City:{{ item.city }}</p>
+            {% else %}
+                <p>Location: Not available</p>
+            {% endif %}
+            {% if item.id %}
+                <form action="{% url 'view_post' item.id %}"><button class="view-post-btn">View Post</button></form>
+            {% else %}
+                <p>Invalid Post ID</p>
+            {% endif %}
+        {% elif item|classname == 'Ad' %}
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="Ad Image">
+            {% endif %}
+            <p>{{ item.description }}</p>
+        {% endif %}
+    </div>
+    <br>
+{% endfor %}
+<br><br><br>
+        </div>
+    </div>
+    <div id="email-popup" class="popup" aria-hidden="true">
+        <div class="popup-content">
+            <div id="container mt-5">
+                <!-- Notifications -->
+<div class="d-flex justify-content-between align-items-center" style="display: flex;justify-content: space-between;align-items: center;">
+                    <p>Notifications:</p>
+                    {% if notifications %}<form method="post" action="/delete_all_notifications/" style="">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete All</button>
+                    </form>{% endif %}
+                </div>
+                <ul class="list-group">
+                    {% for notification in notifications %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{ notification.message }} <br>
+                        <small>{{ notification.timestamp }}</small></span>
+                        <form method="post" action="{% url 'delete_notification' notification.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        // Send the geolocation data to the server
+        fetch('/set_geolocation/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrftoken }}' // Include CSRF token if necessary
+            },
+            body: JSON.stringify({ latitude: lat, longitude: lon })
+        });
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    console.log("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    console.log("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    console.log("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    console.log("An unknown error occurred.");
+                    break;
+            }
+        }
+
+        function sendLocationToServer(latitude, longitude) {
+            fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
+        .then(response => response.json())
+        .then(data => {
+            const state = data.principalSubdivision;
+            fetch('/save_locatio/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ latitude: latitude, longitude: longitude, state: state })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        })}
+
+    window.onload = getLocation;
+    
+    </script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,136 @@
+
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="{% static 'image/logo.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Give&Share</title>
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <link rel="stylesheet" href="{% static 'css\login.css' %}">
+    <meta name="description" content="{% block description %}Login to Give&Share to access your account and start sharing and finding resources. Enjoy secure authentication and a seamless user experience.{% endblock %}">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV26B24W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VBV26B24W3');
+</script>   
+<style>
+.googlelogo {
+    width:65%;
+}
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.alert-icon {
+    margin-right: 10px;
+}
+
+.alert-message {
+    flex-grow: 1;
+}
+
+.alert-close {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-success .alert-icon::before {
+    content: '✔';
+    color: #3c763d;
+    font-size: 20px;
+}
+
+.alert-error, .alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert-error .alert-icon::before, .alert-danger .alert-icon::before {
+    content: '✘';
+    color: #a94442;
+    font-size: 20px;
+}
+
+.alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+.alert-warning .alert-icon::before {
+    content: '⚠';
+    color: #8a6d3b;
+    font-size: 20px;
+}
+
+</style>
+<meta name="keywords" content="{% block keywords %}Give&Share, login, user authentication, account access, secure login, resource sharing, community platform, user experience, find resources, share resources{% endblock %}">
+<style>
+    @media (orientation: landscape) and (max-device-width: 1223px) {
+    .container {
+        position:relative;
+        top:150px
+    }
+    }
+@media (max-width: 768px) {
+    input, textarea {
+        font-size: 16px;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="container" aria-label="Login form container">
+        <a href="{% url 'home' %}"><img src="{% static 'image\icone.png' %}" alt="Give&Share logo" class="logo" aria-label="Give&Share logo"></a>
+        <h1><b>Login</b></h1>       
+        {% if messages %}
+<div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <span class="alert-icon"></span>
+                    <span class="alert-message">{{ message }}</span>
+                    <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+        {% endif %}
+        <form aria-labelledby="Login form" method="post">
+            {% csrf_token %}
+            {{ form.email }}
+
+            {{ form.password }}
+
+            <button type="submit">Sign in</button>
+        </form>
+        <a href="{% url 'password_reset' %}" class="forgot-password">Forgot password?</a>
+        <span>or</span>
+        <a href="{% url 'signup' %}" class="create-account">Create an account</a>
+    </div>
+    {% csrf_token %}
+</body>
+</html>
+{% endblock %}

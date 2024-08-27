@@ -1,0 +1,320 @@
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="{% static 'image/logo.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Post - Give&Share</title>
+    <link rel="stylesheet" href="{% static 'css/createpost.css' %}">
+    <script defer src="{% static 'js/createpost.js' %}"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV26B24W3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-VBV26B24W3');
+    </script>
+    <meta name="description" content="{% block description %}Create a post on Give&Share to share resources with the community. Upload images, add descriptions, and categorize your items easily to connect with those in need.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}Give&Share, create post, share resources, upload images, categorize items, community sharing, resource exchange, donate items, post creation, user-friendly{% endblock %}">
+    <style>
+        @media (orientation: landscape) and (max-device-width : 1223px) {
+            .sidebar .bottom-images img {
+                display: none;
+            }
+            .sidebar .logo {
+                display: none;
+            }
+        }
+        .delete-container {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.delete-checkbox {
+    margin-right: 5px;
+}
+
+.delete-label {
+    font-size: 14px;
+}
+
+form input[type="text"],
+form textarea,
+form select,
+form input[type="file"] {
+    width: 100%;
+    max-width: 600px; /* Adjust the max width as needed */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    margin-bottom: 20px; /* Add some margin for spacing between elements */
+}
+
+form label {
+    display: block; /* Make labels take up the full width of their container */
+    margin-bottom: 5px; /* Add some margin below labels */
+}
+
+/* Optional: Add styling for the submit button to align it with other elements */
+form button[type="submit"] {
+    width: 100%;
+    max-width: 600px; /* Adjust the max width as needed */
+    box-sizing: border-box;
+    margin-top: 20px; /* Add some margin above the button */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    form input[type="text"],
+    form textarea,
+    form select,
+    form input[type="file"],
+    form button[type="submit"] {
+        max-width: 100%; /* Make sure the elements take up the full width */
+    }
+    .content {
+        padding: 0 10px; /* Add some padding to the content */
+    }
+    #description {
+        max-width: 100%;
+    }
+    h1 {
+    margin-top:10%;
+    }
+    form {
+    margin-right:10%;
+    }
+}
+
+@media (min-width: 769px) {
+    h1 {
+      display:flex;
+      justify-content: center;
+    }
+    form {
+    display:flex;
+    align-content:center;
+    flex-wrap:wrap;
+    }
+}
+@media (max-width: 768px) {
+    input, textarea {
+        font-size: 16px;
+    }
+}
+    </style>
+</head>
+<body>
+    <nav class="sidebar" id="menu" aria-hidden="true">
+        <button class="close-btn" aria-label="Close menu">×</button>
+        <img src="{% static 'image/bg-icone.png' %}" alt="Give&Share logo" class="logo">
+        <ul>
+            <li><img src="{% static 'image/home.svg' %}" style="width:30px;height:30px"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><img src="{% static 'image/person-male.svg' %}" style="width:30px;height:30px"><a href="{% url 'portfolio' %}">My Portfolio</a></li>
+            <li><img src="{% static 'image/search.svg' %}" style="width:30px;height:30px"><a href="{% url 'search' %}">Search</a></li>
+            <li><img src="{% static 'image/edit-file.svg' %}" style="width:30px;height:30px"><a href="{% url 'create_post' %}">Make Post</a></li>
+            <li><img src="{% static 'image/chat-bubble.svg' %}" style="width:30px;height:30px"><a href="{% url 'chat_page' %}">Chat</a></li>
+        </ul>
+        <div class="bottom-images">
+            <img src="{% static 'image/box1.png' %}" alt="Additional Image 1" style="left:-90px;bottom:0;width:250px;height:250px">
+            <img src="{% static 'image/box2.png' %}" alt="Additional Image 2" style="left:-80px;width:250px;height:250px;bottom:-100px">
+            <img src="{% static 'image/box3.png' %}" alt="Additional Image 3" style="left:50px;bottom:-60px">
+        </div>
+    </nav>
+    <div class="main-container">
+        <div class="navbar">
+            <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+                ☰
+            </button>
+        </div>
+        <div class="content">
+            <h1>Let's create a Post</h1>
+            <form class="create-post-form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+            
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="6" required></textarea>
+            
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="none">Select a category</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" id="category" name="category_new" placeholder="Or add a new category">
+            
+                <label for="images">Upload images:</label>
+                <input type="file" id="images" name="images" accept="image/*" multiple>
+            
+                <div class="image-previews" id="image-previews"></div>
+            
+                <input type="hidden" id="uploaded-file-ids" name="uploaded_file_ids">
+                <input type="hidden" id="deleted-file-ids" name="deleted_file_ids">
+
+                <input class="latitude" type="hidden" id="id_latitude" name="latitude" value="">
+                <input class="longitude" type="hidden" id="id_longitude" name="longitude" value="">
+                <input type="hidden" name="state" id="state" value="">
+                <button type="submit" class="submit-btn">Submit</button>
+            </form><br><br><br><BR><BR><BR><BR><BR>
+        </div>
+    </div>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    let filesToUpload = [];
+    let filesToDelete = [];
+
+    document.getElementById('images').addEventListener('change', function(event) {
+        const fileList = event.target.files;
+        for (let i = 0; i < fileList.length; i++) {
+            previewFile(fileList[i]);
+        }
+        event.target.value = ''; // Clear the input value to ensure re-uploading the same file works
+    });
+
+    function previewFile(file) {
+        const previewContainer = document.createElement('div');
+        previewContainer.className = 'image-preview';
+
+        const previewImage = document.createElement('img');
+        previewImage.src = URL.createObjectURL(file);
+        previewContainer.appendChild(previewImage);
+
+        const deleteContainer = document.createElement('div');
+        deleteContainer.className = 'delete-container';
+
+        const deleteCheckbox = document.createElement('input');
+        deleteCheckbox.type = 'checkbox';
+        deleteCheckbox.className = 'delete-checkbox';
+        deleteCheckbox.addEventListener('change', function() {
+            if (deleteCheckbox.checked) {
+                filesToDelete.push(file);
+                filesToUpload = filesToUpload.filter(f => f !== file);
+            } else {
+                filesToDelete = filesToDelete.filter(f => f !== file);
+                filesToUpload.push(file);
+            }
+            updateFileIds();
+        });
+
+        const deleteLabel = document.createElement('label');
+        deleteLabel.textContent = 'Delete';
+        deleteLabel.className = 'delete-label';
+
+        deleteContainer.appendChild(deleteCheckbox);
+        deleteContainer.appendChild(deleteLabel);
+        previewContainer.appendChild(deleteContainer);
+
+        document.getElementById('image-previews').appendChild(previewContainer);
+        filesToUpload.push(file);
+        updateFileIds();
+    }
+
+    function updateFileIds() {
+        const fileIds = filesToUpload.map(file => file.name);
+        document.getElementById('uploaded-file-ids').value = fileIds.join(',');
+    }
+
+    function updateDeletedFileIds() {
+        const fileIds = filesToDelete.map(file => file.name);
+        document.getElementById('deleted-file-ids').value = fileIds.join(',');
+    }
+
+    // Ensure files are included in final form submission
+    document.querySelector('.create-post-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+        // Append files to upload
+        filesToUpload.forEach(file => {
+            formData.append('images', file);
+        });
+
+        // Append other form fields
+        const formElements = document.querySelector('.create-post-form').elements;
+        for (let i = 0; i < formElements.length; i++) {
+            if (formElements[i].type !== 'file' && formElements[i].name) {
+                formData.append(formElements[i].name, formElements[i].value);
+            }
+        }
+
+        fetch("{% url 'create_post' %}", {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = "{% url 'dashboard' %}"; // Redirect to dashboard on success
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function getLocation() {
+                console.log("Attempting to get location...");
+                if (navigator.geolocation) {
+                    console.log("Geolocation supported. Requesting position...");
+                    navigator.geolocation.getCurrentPosition(showPosition, showError, {timeout: 10000});
+                } else {
+                    console.log("Geolocation is not supported by this browser.");
+                }
+            }
+
+            function showPosition(position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+                document.getElementById('id_latitude').value = latitude;
+                document.getElementById('id_longitude').value = longitude;
+                console.log("Latitude and Longitude set in hidden fields.");
+                fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
+                .then(response => response.json())
+                .then(data => {
+                    const state = data.principalSubdivision;
+                    document.getElementById('state').value = state;
+                    console.log("State set in hidden fields.");
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+
+            function showError(error) {
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        console.log("User denied the request for Geolocation.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        console.log("Location information is unavailable.");
+                        break;
+                    case error.TIMEOUT:
+                        console.log("The request to get user location timed out.");
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        console.log("An unknown error occurred.");
+                        break;
+                }
+            }
+
+            getLocation();
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,175 @@
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="{% static 'image/logo.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Give&Share</title>
+    <link rel="stylesheet" href="{% static 'css\contact.css' %}">
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV26B24W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VBV26B24W3');
+</script>   
+ <meta name="description" content="{% block description %}Contact Give&Share for any problems, feedback, or innovative ideas. Use our form to reach out and help us improve our platform for a better user experience.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}Give&Share, contact us, feedback, support, help, user experience, platform improvement, problems, innovative ideas, community support{% endblock %}">
+<style>
+.submit-btn {
+    align-self:initial;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: linear-gradient(to right, #FFF787, #7BFEAF);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header .logo {
+    display: flex;
+    align-items: center;
+}
+
+header .logo img {
+    width: 200px;
+    margin-right: 10px;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+input, textarea {
+    font-size:16px;
+}
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.alert-icon {
+    margin-right: 10px;
+}
+
+.alert-message {
+    flex-grow: 1;
+}
+
+.alert-close {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-success .alert-icon::before {
+    content: '✔';
+    color: #3c763d;
+    font-size: 20px;
+}
+
+.alert-error, .alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert-error .alert-icon::before, .alert-danger .alert-icon::before {
+    content: '✘';
+    color: #a94442;
+    font-size: 20px;
+}
+
+.alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+.alert-warning .alert-icon::before {
+    content: '⚠';
+    color: #8a6d3b;
+    font-size: 20px;
+}
+
+.contact-form input, .contact-form textarea {
+    width:96%
+}
+</style>
+</head>
+<body>
+    <div class="main-container">
+<header>
+        <div class="logo">
+            <img src="{% static 'image/icone.png' %}" alt="Give&amp;Share Logo">
+
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'dashboard' %}"><img style="width:30px;height:30px" src="{% static 'image/home.svg' %}"></a></li>
+                <li><a href="{% url 'about_us' %}"><img src="{% static 'image/book.svg' %}" width="30px" height="30px"></a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="content">
+            <h2>Contact Us:</h2>
+            <p>If you have any problems, feedback, or innovative ideas that would make our website better, please contact us by using the form below:</p>
+            <form class="contact-form" method="post" action="{% url 'contact_us' %}">
+                {% csrf_token %}
+                <label for="id_name">Your name:</label>
+                <input type="text" id="id_name" name="name" placeholder="Enter your name">
+                <label for="id_email">Your email:</label>
+                <input type="email" id="id_email" name="email" placeholder="Enter your email">
+                <label for="content">Your message:</label>
+                <textarea id="id_message" rows="10" name="message" placeholder="Enter your message"></textarea>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+<div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <span class="alert-icon"></span>
+                    <span class="alert-message">{{ message }}</span>
+                    <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endfor %}
+        {% endif %}<br><BR><BR><BR>
+    </div>
+        </div>
+    </div>
+</body>
+{% csrf_token %}
+</html>
+{% endblock %}

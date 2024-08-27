@@ -1,0 +1,154 @@
+{% load static %}
+{% load tz %}
+{% load custom_filters %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV26B24W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VBV26B24W3');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.username }} - Give&Share</title>
+    <link rel="shortcut icon" href="{% static 'image/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css\portfolio2.css' %}">
+    <script defer src="{% static 'js\portfolio2.js' %}"></script>
+    <meta name="description" content="{% block description %}Explore user portfolios on Give&Share. View posts, connect with others, and discover valuable resources shared within the community.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}Give&Share, user portfolios, view posts, connect with users, community resources, resource sharing, explore profiles, community interaction, user contributions, profile exploration{% endblock %}">
+<style>
+@media (orientation: landscape) and (max-device-width : 1223px) {
+    .sidebar .bottom-images img {
+        display:none;
+    }
+    .sidebar .logo {
+        display:none;
+    }
+}
+.post img {
+border-radius: 40px;
+}
+</style>
+</head>
+<body>
+    <nav class="sidebar" id="menu" aria-hidden="true">
+        <button class="close-btn" aria-label="Close menu">×</button>
+        <img src="{% static 'image\icone.png' %}" alt="Give&Share logo" class="logo">
+        <ul>
+            <li><img src="{% static 'image\home.svg' %}" style="width:30px;height:30px"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><img src="{% static 'image\person-male.svg' %}" style="width:30px;height:30px"><a href="{% url 'portfolio' %}">My Portfolio</a></li>
+            <li><img src="{% static 'image\search.svg' %}" style="width:30px;height:30px"><a href="{% url 'search' %}">Search</a></li>
+            <li><img src="{% static 'image\edit-file.svg' %}" style="width:30px;height:30px"><a href="{% url 'create_post' %}">Make Post</a></li>
+            <li><img src="{% static 'image\chat-bubble.svg' %}" style="width:30px;height:30px"><a href="{% url 'chat_page' %}">Chat</a></li>
+        </ul>
+        <div class="bottom-images">
+            <img src="{% static 'image\box1.png' %}" alt="Additional Image 1" style="left:-90px;bottom:0;width:250px;height:250px">
+            <img src="{% static 'image\box2.png' %}" alt="Additional Image 2" style="left:-80px;width:250px;height:250px;bottom:-100px">
+            <img src="{% static 'image\box3.png' %}" alt="Additional Image 3" style="left:50px;bottom:-60px">
+        </div>
+    </nav>
+    <div class="main-container">
+        <div class="navbar" style="justify-content:space-around">
+            <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+                ☰
+            </button>
+            <div class="user-info">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="{{ profile.username }}" class="profile-picture">
+                {% else %}
+                    <img src="{% static 'default\avatar.png' %}" alt="{{ profile.username }}" class="profile-picture">
+                {% endif %}
+                <span class="username">{{ profile.username }}</span>
+                <span class="number-of-posts">Number of posts:{{post_count}}</span>
+                {% if request.user != profile.user %}
+                <form action="{% url 'start_private_chat' profile.user.id %}"><button class="text-to-user-btn">Text to User</button></form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="content">
+            <h2>Posts:</h2>
+{% for item in post_list %}
+                <div class="post">
+                    <h3>{{ item.post.title }}</h3>
+                    <div class="col-md-2">
+                          <img src="{{ item.post.image_url }}" class="img-fluid" alt="{{ item.post.title }}">
+                    </div>
+                    <div class="post-description">
+                        <p>Description of the Post: {{ item.post.description|truncatewords:30 }}</p>
+                        <p>Category: {{ item.post.category.name }}</p>
+                        {% if item.post.country and item.post.city %}
+            <p>Country:{{ item.post.country }}, {% if item.post.country == "United States" %}State:{{ item.post.state }},{% endif %}City:{{ item.post.city }}</p>
+        {% else %}
+            <p>Location: Not available</p>
+        {% endif %}
+                        <p>Published on: {{ item.post.created_at|localtime|date:"F j, Y, g:i a" }}</p>
+                        <form action="{% url 'view_post' item.post.id %}"><button class="view-posts-btn">View Post</button></form>
+                    </div>
+                </div><br><br><br>
+                {% endfor %}
+        </div>
+    </div>
+    {% csrf_token %}
+    <script>
+        function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
+    
+    function showPosition(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        sendLocationToServer(latitude, longitude);
+    }
+    
+    function showError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                console.log("User denied the request for Geolocation.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                console.log("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                console.log("The request to get user location timed out.");
+                break;
+            case error.UNKNOWN_ERROR:
+                console.log("An unknown error occurred.");
+                break;
+        }
+    }
+    
+    function sendLocationToServer(latitude, longitude) {
+        fetch('/save_location/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ latitude: latitude, longitude: longitude })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+    
+    window.onload = getLocation;
+    
+    </script>
+</body>
+</html>
+{% endblock %}

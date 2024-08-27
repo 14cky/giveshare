@@ -1,0 +1,301 @@
+
+{% load static %}
+
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="shortcut icon" href="{% static 'image/logo.png' %}">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV26B24W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VBV26B24W3');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Give&Share</title>
+    <link rel="stylesheet" href="{% static 'css\signup.css' %}">
+    <meta name="description" content="{% block description %}Join Give&Share today to start sharing and finding resources within your community. Sign up for a secure and seamless experience, and become part of our generous and connected community.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}Give&Share, sign up, create account, community platform, resource sharing, join community, secure registration, user authentication, find resources, share resources{% endblock %}">
+<style>
+    @media (orientation: landscape) and (max-device-width: 1223px) {
+    .container {
+        position:relative;
+        top:150px
+    }
+    }
+.container {
+    max-height: 100vh; /* Ensure the container does not exceed the viewport height */
+    overflow-y: auto; /* Make the container scrollable */
+    padding: 20px; /* Add padding for better spacing */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+width: 400px; /* Fixed width for the container */
+    margin: 0 auto; /* Center the container */
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.alert-icon {
+    margin-right: 10px;
+}
+
+.alert-message {
+    flex-grow: 1;
+}
+
+.alert-close {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-success .alert-icon::before {
+    content: '✔';
+    color: #3c763d;
+    font-size: 20px;
+}
+
+.alert-error, .alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert-error .alert-icon::before, .alert-danger .alert-icon::before {
+    content: '✘';
+    color: #a94442;
+    font-size: 20px;
+}
+
+.alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+.alert-warning .alert-icon::before {
+    content: '⚠';
+    color: #8a6d3b;
+    font-size: 20px;
+}
+
+.invalid-feedback {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+    border-color: #faebcc;
+    box-sizing: border-box;
+}
+
+.invalid-feedback .alert-icon {
+    margin-right: 10px;
+}
+
+.invalid-feedback .alert-icon::before {
+    content: '⚠';
+    color: #8a6d3b;
+    font-size: 20px;
+}
+
+.invalid-feedback .alert-message {
+    flex-grow: 1;
+}
+
+.invalid-feedback .alert-close {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    input, textarea {
+        font-size: 16px;
+    }
+}
+</style>
+</head>
+<body>
+ <div class="container" aria-label="Sign up form container">
+        <a href="{% url 'home' %}"><img src="{% static 'image\icone.png' %}" alt="Give&Share logo" class="logo" aria-label="Give&Share logo"></a>
+        <h1><b>Let's sign up</b></h1>
+{% if messages %}
+<div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <span class="alert-icon"></span>
+                    <span class="alert-message">{{ message }}</span>
+                    <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+        {% endif %}
+        <form aria-labelledby="Sign up form" method="post">
+            {% csrf_token %}
+            {{ form.username }}
+{% if form.username.errors %}
+                <div class="invalid-feedback d-block">
+                    <span class="alert-icon"></span>
+                    <span class="alert-message">
+                        {% for error in form.username.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </span>
+                    <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endif %}
+
+            {{ form.email }}
+{% if form.email.errors %}
+                <div class="invalid-feedback d-block">
+                    <span class="alert-icon"></span>
+                    <span class="alert-message">
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </span>
+                    <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endif %}
+
+            {{ form.password1 }}
+{% if form.password1.errors %}
+                <div class="invalid-feedback d-block">
+                    <span class="alert-icon"></span>
+                    <span class="alert-message">
+                        {% for error in form.password1.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </span>
+                    <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endif %}
+
+            <ul class="password-requirements">
+                <li>Your password can’t be too similar to your other personal information.</li>
+                <li>Your password must contain at least 8 characters.</li>
+                <li>Your password can’t be a commonly used password.</li>
+                <li>Your password can’t be entirely numeric.</li>
+            </ul>
+
+            {{ form.password2 }}
+{% if form.password2.errors %}
+                <div class="invalid-feedback d-block">
+                    <span class="alert-icon"></span>
+                    <span class="alert-message">
+                        {% for error in form.password2.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </span>
+                    <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endif %}
+
+            <div class="terms">
+                <input type="checkbox" class="form-check-input" id="id_agree_to_terms" name="agree_to_terms" required>
+                <label for="terms">I agree with the <a href="{% url 'deal' %}">Terms and Conditions</a></label>
+{% if form.agree_to_terms.errors %}
+                    <div class="invalid-feedback d-block">
+                        <span class="alert-icon"></span>
+                        <span class="alert-message">
+                            {% for error in form.agree_to_terms.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </span>
+                        <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            {{ form.captcha }}
+{% if form.captcha.errors %}
+                <div class="invalid-feedback d-block">
+                    <span class="alert-icon"></span>
+                    <span class="alert-message">
+                        {% for error in form.captcha.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </span>
+                    <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endif %}
+
+            <button type="submit">Create</button>
+        </form>
+        <span>or</span>
+        <a href="{% url 'login' %}" class="sign-in">Already created? Sign in</a>
+    </div>
+<script>
+function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        // Send the geolocation data to the server
+        fetch('/set_geolocation/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrftoken }}' // Include CSRF token if necessary
+            },
+            body: JSON.stringify({ latitude: lat, longitude: lon })
+        });
+        console.log("Everything is cool, {lat} and {lon} are sent");
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    console.log("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    console.log("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    console.log("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    console.log("An unknown error occurred.");
+                    break;
+            }
+        }
+
+window.onload = getLocation;
+</script>
+</body>
+</html>
+{% endblock %}

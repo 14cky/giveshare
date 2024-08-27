@@ -1,0 +1,347 @@
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Edit Post - Give&Share</title>
+    <link rel="shortcut icon" href="{% static 'image/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/editpost.css' %}">
+    <script defer src="{% static 'js/editpost.js' %}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV26B24W3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-VBV26B24W3');
+    </script>
+    <meta name="description" content="{% block description %}Edit your existing posts on Give&Share. Update titles, descriptions, categories, and images to keep your shared resources relevant and accessible to the community.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}Give&Share, edit post, update resources, post management, edit title, update description, change category, upload images, community sharing, resource accessibility{% endblock %}">
+    <style>
+        .edit-post-form .form-control {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+.image-preview {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.image-preview img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .image-preview {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .image-preview img {
+        width: 100%;
+        height: auto;
+        max-width: none;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    .image-preview input {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .edit-post-form {
+        margin-right:10%;
+    }
+}
+
+.edit-post-form {
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+}
+form input[type="text"],
+form textarea,
+form select,
+form input[type="file"] {
+    width: 100%;
+    max-width: 600px; /* Adjust the max width as needed */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    margin-bottom: 20px; /* Add some margin for spacing between elements */
+}
+
+form label {
+    display: block; /* Make labels take up the full width of their container */
+    margin-bottom: 5px; /* Add some margin below labels */
+}
+
+/* Optional: Add styling for the submit button to align it with other elements */
+form button[type="submit"] {
+    width: 100%;
+    max-width: 600px; /* Adjust the max width as needed */
+    box-sizing: border-box;
+    margin-top: 20px; /* Add some margin above the button */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    form {
+        padding: 0 20px; /* Add some padding to the form */
+    }
+    form input[type="text"],
+    form textarea,
+    form select,
+    form input[type="file"],
+    form button[type="submit"] {
+        max-width: 100%; /* Make sure the elements take up the full width */
+    }
+    .content {
+        padding: 0 10px; /* Add some padding to the content */
+    }
+}
+    </style>
+</head>
+<body>
+    <nav class="sidebar" id="menu" aria-hidden="true">
+        <button class="close-btn" aria-label="Close menu">×</button>
+        <img src="{% static 'image/icone.png' %}" alt="Give&Share logo" class="logo">
+        <ul>
+            <li><img src="{% static 'image/home.svg' %}" style="width:30px;height:30px"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><img src="{% static 'image/person-male.svg' %}" style="width:30px;height:30px"><a href="{% url 'portfolio' %}">My Portfolio</a></li>
+            <li><img src="{% static 'image/search.svg' %}" style="width:30px;height:30px"><a href="{% url 'search' %}">Search</a></li>
+            <li><img src="{% static 'image/edit-file.svg' %}" style="width:30px;height:30px"><a href="{% url 'create_post' %}">Make Post</a></li>
+            <li><img src="{% static 'image/chat-bubble.svg' %}" style="width:30px;height:30px"><a href="{% url 'chat_page' %}">Chat</a></li>
+        </ul>
+        <div class="bottom-images">
+            <img src="{% static 'image/box1.png' %}" alt="Additional Image 1" style="left:-90px;bottom:0;width:250px;height:250px">
+            <img src="{% static 'image/box2.png' %}" alt="Additional Image 2" style="left:-80px;width:250px;height:250px;bottom:-100px">
+            <img src="{% static 'image/box3.png' %}" alt="Additional Image 3" style="left:50px;bottom:-60px">
+        </div>
+    </nav>
+    <div class="main-container">
+        <div class="navbar">
+            <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+                ☰
+            </button>
+        </div>
+        <div class="content">
+            <h1>Edit Post</h1>
+<form class="edit-post-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <label for="title">Title:</label>
+    {{ form.title }}
+
+    <label for="description">Description:</label>
+    {{ form.description }}
+
+    <label for="category">Category:</label>
+    {{ form.category }}
+
+    <input type="hidden" id="latitude" name="latitude" value="">
+    <input type="hidden" id="longitude" name="longitude" value="">
+
+    <input type="hidden" id="uploaded-file-ids" name="uploaded_file_ids" value="">
+    <input type="hidden" id="deleted-file-ids" name="deleted_file_ids" value="">
+
+    <label for="current-images">Current Images:</label>
+    <div class="current-images" id="current-images">
+        <ul>
+            {% for photo in post.photos.all %}
+            <li>
+                <div class="image-preview">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.description }}" style="max-width: 100px; max-height: 100px;">
+                    <input type="checkbox" name="delete_images" value="{{ photo.id }}" class="delete-checkbox"> Delete
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <label for="new-images">Add New Images:</label>
+    <input type="file" id="new-images" name="images" accept="image/*" multiple>
+
+    <div class="image-previews" id="new-image-previews"></div>
+
+    <button type="submit" class="submit-btn">Save</button>
+</form><br><br>
+        </div><br><br>
+    </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const newFileInput = document.getElementById('new-images');
+        const newImagePreviewsContainer = document.getElementById('new-image-previews');
+        const currentImagesContainer = document.getElementById('current-images');
+        const uploadedFileIdsInput = document.getElementById('uploaded-file-ids');
+        const deletedFileIdsInput = document.getElementById('deleted-file-ids');
+
+        if (!newFileInput || !newImagePreviewsContainer || !currentImagesContainer || !uploadedFileIdsInput || !deletedFileIdsInput) {
+            console.error("One or more elements are missing in the DOM.");
+            return;
+        }
+
+        let filesToUpload = [];
+        let filesToDelete = [];
+
+        newFileInput.addEventListener('change', function(event) {
+            Array.from(newFileInput.files).forEach(file => {
+                previewFile(file);
+            });
+            event.target.value = ''; // Clear the input value to ensure re-uploading the same file works
+        });
+
+        function previewFile(file) {
+            const previewContainer = document.createElement('div');
+            previewContainer.className = 'image-preview';
+
+            const previewImage = document.createElement('img');
+            previewImage.src = URL.createObjectURL(file);
+            previewContainer.appendChild(previewImage);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'delete-btn';
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', function() {
+                previewContainer.remove();
+                filesToUpload = filesToUpload.filter(f => f !== file);
+                updateFileIds();
+            });
+            previewContainer.appendChild(deleteButton);
+
+            newImagePreviewsContainer.appendChild(previewContainer);
+            filesToUpload.push(file);
+            updateFileIds();
+        }
+
+        function updateFileIds() {
+            const fileIds = filesToUpload.map(file => file.name);
+            uploadedFileIdsInput.value = fileIds.join(',');
+        }
+
+        function updateDeletedFileIds() {
+            const fileIds = filesToDelete.join(',');
+            deletedFileIdsInput.value = fileIds;
+            console.log('Deleted file IDs:', fileIds); // Log the deleted file IDs for debugging
+        }
+
+        document.querySelector('.edit-post-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            const formData = new FormData();
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+            // Append files to upload
+            filesToUpload.forEach(file => {
+                formData.append('images', file);
+            });
+
+            // Append other form fields
+            const formElements = document.querySelector('.edit-post-form').elements;
+            for (let i = 0; i < formElements.length; i++) {
+                if (formElements[i].type !== 'file' && formElements[i].name) {
+                    formData.append(formElements[i].name, formElements[i].value);
+                }
+            }
+
+            fetch("{% url 'edit_post' post.id %}", {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "{% url 'portfolio' %}"; // Redirect to portfolio on success
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        currentImagesContainer.addEventListener('change', function(event) {
+            if (event.target.type === 'checkbox' && event.target.name === 'delete_images') {
+                if (event.target.checked) {
+                    filesToDelete.push(event.target.value);
+                } else {
+                    filesToDelete = filesToDelete.filter(id => id !== event.target.value);
+                }
+                updateDeletedFileIds();
+            }
+        });
+    });
+</script>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        }
+        
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            sendLocationToServer(latitude, longitude);
+            document.getElementById('latitude').value = latitude;
+            document.getElementById('longitude').value = longitude;
+        }
+        
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    console.log("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    console.log("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    console.log("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    console.log("An unknown error occurred.");
+                    break;
+            }
+        }
+        
+        function sendLocationToServer(latitude, longitude) {
+            fetch('/save_location/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ latitude: latitude, longitude: longitude })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+        
+        window.onload = getLocation;    
+    </script>
+</body>
+</html>
+{% endblock %}
